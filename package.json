@@ -6,8 +6,9 @@
   "scripts": {
     "start:build": "tsc -w",
     "start:run": "nodemon -r dotenv/config build/server.js",
-    "start": "concurrently npm:start:*",
-    "test": "jest --detectOpenHandles --runInBand"
+    "dev": "concurrently npm:start:*",
+    "test": "jest --detectOpenHandles --runInBand",
+    "start": "tsc && node -r dotenv/config build/server.js"
   },
   "keywords": [],
   "author": "",
