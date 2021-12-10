@@ -1,10 +1,12 @@
 //TODO: separate out routes
 
 import { Router, Request, Response } from 'express';
-import { v4 as uuidv4 } from "uuid";
 
-import { QuestionInstance } from '../model/question';
-import questionValidator from '../validator/questionValidator';
+import QuestionValidator from '../validator/question.validator';
+import QuestionController from '../controllers/question.controller';
+import UserController from '../controllers/user.controller';
+import UserValidator from '../validator/user.validator';
+
 import middleware from '../middleware';
 const router = Router();
 
@@ -12,63 +14,16 @@ router.get('/', (req: Request, res: Response) => {
     res.send('Welcome to the Stackflow API');
 });
 
-router.post('/question/create', questionValidator.checkCreateQuestion(), middleware.handleValidationError,
-    async (req: Request, res: Response) => {
-        console.log(req.body);
-        const { title, desc } = req.body;
-        try {
-            const id = uuidv4();
-            const user_id = uuidv4();
-            const questions = await QuestionInstance.create({ id, user_id, title, desc });
-            res.json({
-                msg: 'Question Created Successfully',
-                questions
-            })
-        } catch (error) {
-            return res.json({ status: 500, msg: 'failed to create question' })
-        }
-    });
+//Authentication Routes
+router.post('/user/signup', UserValidator.checkSignup(), middleware.handleValidationError, UserController.signup);
+router.post('/user/login', UserValidator.checkLogin(), middleware.handleValidationError,  UserController.login);
 
-router.get('/question/read', questionValidator.checkReadTodo(), middleware.handleValidationError,
-    async (req: Request, res: Response) => {
-        try {
 
-            const limit = parseInt((req.query?.limit as string | undefined) || '10');
-            const offset = parseInt((req.query?.limit as string | undefined) || '10');
-            const question = await QuestionInstance.findAll({ limit, offset });
-            res.json({
-                msg: 'Questions retrieved Successfully',
-                question
-            })
-        } catch (error) {
-            console.log(error);
-            return res.json({ status: 500, msg: 'failed to retrieve question' })
-        }
-    });
+// Question Routes
+router.get('/question/read', QuestionValidator.checkReadTodo(), middleware.handleValidationError, QuestionController.readPagination);
+router.post('/question/create', QuestionValidator.checkCreateQuestion(), middleware.handleValidationError, QuestionController.create);
+router.get('/question/read/:id', QuestionValidator.checkIdParam(), middleware.handleValidationError,QuestionController.readByID);
 
-router.get('/question/read/:id', questionValidator.checkIdParam(), middleware.handleValidationError,
-    async (req: Request, res: Response) => {
-        try {
-            const { id } = req.params;
-            const question = await QuestionInstance.findOne({ where: { id } });
-            res.json({
-                msg: 'Question found!',
-                question
-            })
-        } catch (error) {
-            console.log(error);
-            return res.json({ status: 500, msg: 'failed to retrieve question' })
-        }
-    });
 
-router.post('/login', (req: Request, res: Response) => {
-    const { email, password } = req.body;
-
-    if (email) {
-        res.send(email.toUpperCase());
-    } else {
-        res.send('You must provide an email')
-    }
-});
 
 export { router };
