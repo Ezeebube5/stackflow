@@ -8,7 +8,7 @@
     "start:run": "nodemon -r dotenv/config build/server.js",
     "dev": "concurrently npm:start:*",
     "test": "jest --detectOpenHandles --runInBand",
-    "start": "tsc && node -r dotenv/config build/server.js"
+    "start": "node -r dotenv/config build/server.js"
   },
   "keywords": [],
   "author": "",
