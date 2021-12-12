@@ -3,7 +3,7 @@ import app from '../app';
 import { UserInstance } from '../model/user.model';
 import { invalidUser, user } from './testData';
 import db from '../config/database.config';
-
+import redisClient from '../config/redis.config';
 // jest.useFakeTimers();
 
 // let server: any, agent;
@@ -12,6 +12,11 @@ beforeAll(async () => {
     await db.sync({ force: true }).then(() => {
         console.log('Refreshed Test DB for Auth Test')
     })
+});
+
+afterAll(async () => {
+   await redisClient.shutDown();
+   console.log('redis shutdown');
 });
 
 

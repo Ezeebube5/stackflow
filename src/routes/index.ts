@@ -7,6 +7,9 @@ import QuestionController from '../controllers/question.controller';
 import UserController from '../controllers/user.controller';
 import UserValidator from '../validator/user.validator';
 
+import TestController from '../controllers/test.controller';
+
+
 import middleware from '../middleware';
 const router = Router();
 
@@ -14,9 +17,15 @@ router.get('/', (req: Request, res: Response) => {
     res.send('Welcome to the Stackflow API');
 });
 
+
+//Test route for sandbox testing
+router.get('/test', TestController.create);
+
+
 //Authentication Routes
 router.post('/user/signup', UserValidator.checkSignup(), middleware.handleValidationError, UserController.signup);
-router.post('/user/login', UserValidator.checkLogin(), middleware.handleValidationError,  UserController.login);
+router.post('/user/login', UserValidator.checkLogin(), middleware.handleValidationError, UserController.login);
+router.post('/user/logout', UserValidator.checkLogin(), middleware.handleValidationError, UserController.login);
 
 
 // Question Routes
