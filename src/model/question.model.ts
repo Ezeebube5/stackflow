@@ -1,14 +1,15 @@
 import { DataTypes, Model, } from "sequelize";
 import db from "../config/database.config";
+import {UserInstance} from './user.model';
 
 interface QuestionAttributes {
     id: string;
-    user_id: string; //TODO: REMOVE NULL ONCE USER IS BEING PASSED
+    user_id: string; 
     title: string;
     desc: string;
 }
 
-export class QuestionInstance extends Model <QuestionAttributes> {}
+export class QuestionInstance extends Model<QuestionAttributes> {}
 
 QuestionInstance.init(
     {
@@ -19,16 +20,20 @@ QuestionInstance.init(
             allowNull: false,
         },
          user_id: {
-            type: DataTypes.UUID, //TODO: relate this to user table
+            type: DataTypes.UUID, 
             defaultValue: DataTypes.UUIDV4,
             allowNull: false,
+             references: {
+                 model: UserInstance,
+                 key: "id"
+             }
         },
          title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
          desc: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false,
         },
     },{sequelize: db, tableName: 'questions', 
@@ -39,3 +44,13 @@ QuestionInstance.init(
     // }
 }
 )
+
+// QuestionInstance.belongsTo(UserInstance, {
+//     foreignKey: {
+//         name: 'user_id',        
+//         allowNull: false,
+//     },
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE',
+
+// });

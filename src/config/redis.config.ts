@@ -1,29 +1,33 @@
 import { createClient } from 'redis';
 import config from './env.config'
 
-class RedisClient{
-    redisClient:any;
+class RedisClient {
+    redisClient: any;
 
-    constructor (){
-       this.redisClient = createClient({ url: config.redisUrl });
+    constructor() {
+        this.redisClient = createClient({ url: config.redisUrl });
         this.redisClient.connect().then(
             console.log('Redis DB connected!')
         );
 
-        this.redisClient.on('error',  (err:any)=> { console.error('Redis DB Connection Error:',err) })
+        this.redisClient.on('error', (err: any) => { console.error('Redis DB Connection Error:', err) })
 
     }
 
-    async saveToken(user_id:string, token:string):Promise<string>{
-       return await this.redisClient.set(user_id, token);
+    async saveToken(user_id: string, token: string): Promise<string> {
+        return await this.redisClient.set(user_id, token);
     }
 
-    async removeToken(user_id: string): Promise<string> {
+    async getToken(user_id: string): Promise<string> {
         return await this.redisClient.get(user_id);
     }
 
-    async shutDown(){
-       return await this.redisClient.disconnect();
+    async removeToken(user_id: string): Promise<string> {
+        return await this.redisClient.getDel(user_id)
+    }
+
+    async shutDown() {
+        return await this.redisClient.disconnect();
     }
 
 }

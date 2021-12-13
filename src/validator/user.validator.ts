@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 
 class UserValidator {
@@ -22,6 +22,23 @@ class UserValidator {
             body('password').notEmpty().withMessage('Please, provide a password')
                 .isLength({ min: 6 }).withMessage('Password must have at least 6 characters'),
         ]
+    }
+
+    checkToken() {
+        return [
+            param('token').notEmpty().isLength({ min: 20 }).withMessage('Please, provide a valid link'),
+        ]
+    }
+    checkEmail() {
+        return [
+            body('email').notEmpty().isEmail().withMessage('Please, provide a valid email'),
+        ]
+    }
+
+    checkPassword() {
+        return [
+            body('password').notEmpty().withMessage('Please, provide a new password')
+                .isLength({ min: 6 }).withMessage('Password must have at least 6 characters'),]
     }
 }
 

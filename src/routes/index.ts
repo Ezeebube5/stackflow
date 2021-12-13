@@ -25,13 +25,21 @@ router.get('/test', TestController.create);
 //Authentication Routes
 router.post('/user/signup', UserValidator.checkSignup(), middleware.handleValidationError, UserController.signup);
 router.post('/user/login', UserValidator.checkLogin(), middleware.handleValidationError, UserController.login);
-router.post('/user/logout', UserValidator.checkLogin(), middleware.handleValidationError, UserController.login);
+router.post('/user/logout', middleware.isAuthenticated, UserController.logout);
+
+//Email Verification
+router.post('/email/resendverification', UserValidator.checkEmail(), middleware.handleValidationError, UserController.resendEmailVerification);
+router.get('/email/verify/:token', UserValidator.checkToken(), middleware.handleValidationError, UserController.checkEmailVerification);
+
+//Password Reset
+router.post('/password/requestchange', UserValidator.checkEmail(), middleware.handleValidationError, UserController.requestPasswordChange);
+router.post('/password/new/:token', UserValidator.checkPassword(), middleware.handleValidationError, UserController.changePassword);
 
 
 // Question Routes
 router.get('/question/read', QuestionValidator.checkReadTodo(), middleware.handleValidationError, QuestionController.readPagination);
 router.post('/question/create', QuestionValidator.checkCreateQuestion(), middleware.handleValidationError, QuestionController.create);
-router.get('/question/read/:id', QuestionValidator.checkIdParam(), middleware.handleValidationError,QuestionController.readByID);
+router.get('/question/read/:id', QuestionValidator.checkIdParam(), middleware.handleValidationError, QuestionController.readByID);
 
 
 

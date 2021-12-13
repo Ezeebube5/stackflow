@@ -1,5 +1,7 @@
 import { DataTypes, Model, } from "sequelize";
 import db from "../config/database.config";
+import AuthUtils from '../utils/authentication'
+
 
 interface UserAttributes {
     id: string;
@@ -51,10 +53,35 @@ UserInstance.init(
         },
     }, {
     sequelize: db, tableName: 'users',
-    // hooks:{
+    // hooks: {
     //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //     beforeCreate:(User: any, options)=> {
-    //         question.id = uuidv4();
+    //     beforeCreate: async (UserInstance: any, options) => {
+    //         if (UserInstance.changed("password")) {
+    //             const hashedPassword = await AuthUtils.hashPassword(UserInstance.getDataValue('password'))
+    //             UserInstance.setDataValue('password', hashedPassword);
+    //         }
+    //     }, beforeUpdate: async (UserInstance: any, options) => {
+    //         if (UserInstance.changed("password")) {
+    //             const hashedPassword = await AuthUtils.hashPassword(UserInstance.getDataValue('password'))
+    //             UserInstance.setDataValue('password', hashedPassword);
+    //         }
+    //     },
     // }
 }
 )
+// async function encryptPasswordIfChanged(UserInstance: any, options: any) {
+//     try {
+//         if (UserInstance.changed("password")) {
+//             const hashedPassword = await AuthUtils.hashPassword(UserInstance.getDataValue('password'))
+//             UserInstance.setDataValue('password', hashedPassword);
+//         }
+//     } catch (err) {
+//         console.log('beforeCreate Hook Error', err)
+//     }
+// }
+// UserInstance.beforeCreate(encryptPasswordIfChanged);
+// UserInstance.beforeUpdate(encryptPasswordIfChanged);
+
+// UserInstance.hasMany(QuestionInstance, foreignKeyId )
+// UserInstance.hasMany(PasswordResetInstance, foreignKeyEmail)
+// UserInstance.hasMany(EmailVerificationInstance, foreignKeyEmail)
