@@ -38,8 +38,11 @@ router.post('/password/new/:token', UserValidator.checkPassword(), middleware.ha
 
 // Question Routes
 router.get('/question/read', QuestionValidator.checkReadTodo(), middleware.handleValidationError, QuestionController.readPagination);
-router.post('/question/create', QuestionValidator.checkCreateQuestion(), middleware.handleValidationError, QuestionController.create);
 router.get('/question/read/:id', QuestionValidator.checkIdParam(), middleware.handleValidationError, QuestionController.readByID);
+router.post('/question/create', middleware.isAuthenticated, QuestionValidator.checkCreateQuestion(), middleware.handleValidationError, QuestionController.create);
+router.post('/question/update/:id', middleware.isAuthenticated, QuestionValidator.checkCreateQuestion(),
+    QuestionValidator.checkIdParam(), middleware.handleValidationError, QuestionController.update);
+router.get('/question/delete/:id', middleware.isAuthenticated, QuestionValidator.checkIdParam(), middleware.handleValidationError, QuestionController.delete);
 
 
 

@@ -1,6 +1,9 @@
 import { DataTypes, Model, } from "sequelize";
 import db from "../config/database.config";
 import AuthUtils from '../utils/authentication'
+import { EmailVerificationInstance } from "./emailVerification.model";
+import { PasswordResetInstance } from "./passwordReset.model";
+import { QuestionInstance } from "./question.model";
 
 
 interface UserAttributes {
@@ -82,6 +85,39 @@ UserInstance.init(
 // UserInstance.beforeCreate(encryptPasswordIfChanged);
 // UserInstance.beforeUpdate(encryptPasswordIfChanged);
 
-// UserInstance.hasMany(QuestionInstance, foreignKeyId )
-// UserInstance.hasMany(PasswordResetInstance, foreignKeyEmail)
-// UserInstance.hasMany(EmailVerificationInstance, foreignKeyEmail)
+
+
+// UserInstance.hasMany(QuestionInstance, {
+//  foreignKey: {
+//         name: 'user_id',
+//         allowNull: false,
+//     },
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE',
+
+// })
+// QuestionInstance.belongsTo(UserInstance);
+
+UserInstance.hasMany(EmailVerificationInstance, {
+    foreignKey: {
+        name: 'user_email',
+        allowNull: false,
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+
+})
+EmailVerificationInstance.belongsTo(UserInstance);
+
+
+UserInstance.hasMany(PasswordResetInstance, {
+    foreignKey: {
+        name: 'user_email',
+        allowNull: false,
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+
+})
+PasswordResetInstance.belongsTo(UserInstance);
+

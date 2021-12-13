@@ -1,15 +1,16 @@
 import { DataTypes, Model, } from "sequelize";
 import db from "../config/database.config";
-import {UserInstance} from './user.model';
+import { AnswerInstance } from "./answer.model";
+import { UserInstance } from './user.model';
 
 interface QuestionAttributes {
     id: string;
-    user_id: string; 
+    user_id: string;
     title: string;
     desc: string;
 }
 
-export class QuestionInstance extends Model<QuestionAttributes> {}
+export class QuestionInstance extends Model<QuestionAttributes> { }
 
 QuestionInstance.init(
     {
@@ -19,24 +20,25 @@ QuestionInstance.init(
             primaryKey: true,
             allowNull: false,
         },
-         user_id: {
-            type: DataTypes.UUID, 
+        user_id: {
+            type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             allowNull: false,
-             references: {
-                 model: UserInstance,
-                 key: "id"
-             }
+            references: {
+                model: UserInstance,
+                key: "id"
+            }
         },
-         title: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-         desc: {
+        desc: {
             type: DataTypes.TEXT,
             allowNull: false,
         },
-    },{sequelize: db, tableName: 'questions', 
+    }, {
+        sequelize: db, tableName: 'questions',
     // hooks:{
     //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     //     beforeCreate:(question: any, options)=> {
@@ -54,3 +56,11 @@ QuestionInstance.init(
 //     onUpdate: 'CASCADE',
 
 // });
+
+QuestionInstance.hasMany(AnswerInstance, {
+    foreignKey: {
+        name: 'question_id'
+    }
+});
+AnswerInstance.belongsTo(QuestionInstance)
+

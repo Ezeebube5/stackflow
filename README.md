@@ -19,6 +19,10 @@ npm install
 
 ## Challenges faced
 
+- Personal Logistics - Had to relocate on short notice. 
+- Some ORM features not working - associations, seeding (Had to implement work arounds)
+- Global test setup files were not working. Had to setup test files individually
+
 ## Visuals
 
 ## Improvements

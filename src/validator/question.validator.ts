@@ -5,7 +5,7 @@ class QuestionValidator {
     checkCreateQuestion() {
         return [
             body('title').notEmpty().withMessage('Please, provide a title'),
-            body('body').notEmpty().withMessage('Please, provide a title')
+            body('desc').notEmpty().withMessage('Please, provide a description')
         ]
     }
     checkReadTodo() {

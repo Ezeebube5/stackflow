@@ -1,33 +1,66 @@
-export const posts = [
+import faker from "faker";
+
+const defaultUserId = '435cbcaf-731c-47b5-925f-c486f28f1277'
+export const questions = [
     {
-        "userId": '435cbcaf-731c-47b5-925f-c486f28f30f0',
-        "id": 'a3bbce15 - 66d0- 47d3 - 9bef - 3d8a44b20670',
+        "user_id": defaultUserId,
+        "id": '1b1c6e6b-811b-49b9-b517-bbe31fabe572',
         "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-        "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+        "desc": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
     },
     {
-        "userId": '435cbcaf-731c-47b5-925f-c486f28f3022',
-        "id": 'a3bbce15 - 66d0- 47d3 - 9bef - 3d8a44b20611',
+        "user_id": defaultUserId,
+        "id": 'f6be68fc-cf33-4706-91b9-b23de56f55f8',
         "title": "qui est esse",
-        "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+        "desc": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
     },
     {
-        "userId": '435cbcaf-731c-47b5-925f-c486f28f3088',
-        "id": 'a3bbce15 - 66d0- 47d3 - 9bef - 3d8a44b20699',
+        "user_id": defaultUserId,
+        "id": '272a4da3-50af-4784-b195-74eb9e8b4c75',
         "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
-        "body": "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
+        "desc": "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
     }];
 
-export const postById =
+export const answers = [
+    {
+        "user_id": defaultUserId,
+        "id": '1b1c3467-811b-49b9-b517-bbe31fabe572',
+        "question_id": questions[0].id,
+        "response": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+    },
+    {
+        "user_id": defaultUserId,
+        "id": 'f6be1097-cf33-4706-91b9-b23de56f55f8',
+        "question_id": questions[1].id,
+        "response": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+    },
+    {
+        "user_id": defaultUserId,
+        "id": '272a1003-50af-4784-b195-74eb9e8b4c75',
+        "question_id": questions[2].id,
+        "response": "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
+    }];
+
+export const questionById =
 {
-    "userId": '435cbcaf-731c-47b5-925f-c486f28f3066',
+    "user_id": defaultUserId,
     "id": 'a3bbce15 - 66d0- 47d3 - 9bef - 3d8a44b20658',
     "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+    "desc": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+
+
 };
 
+export const questionUpdate =
+{
+    "title": "updated facere repellat provident occaecati excepturi optio reprehenderit",
+    "desc": "updatedsuscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+
+
+};
 
 export const user = {
+    id: defaultUserId,
     first_name: 'Charles',
     last_name: 'Dickens',
     email: 'charles@gmail.com',
