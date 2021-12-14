@@ -51,6 +51,7 @@ describe('Can Get /answer/:id', () => {
         const response = await request(app)
             .get(`/api/v1/answer/read/${answers[0].id}`)
             .expect(200);
+        console.log('answer by id', response.body)
         expect(response.body).toHaveProperty('answer');
 
     })
@@ -58,6 +59,11 @@ describe('Can Get /answer/:id', () => {
 
 describe('Can Post /answer/create', () => {
     test('It should respond with 201 created', async () => {
+        const mockJobQueue = jest.fn((): any => 'email sent');
+        jest
+            .spyOn(JobQueue, "add")
+            .mockImplementation(() => mockJobQueue());
+
         console.log('auth header', authHeader)
         const response = await request(app)
             .post(`/api/v1/answer/create`).set(authHeader).send(answerById)
@@ -95,6 +101,14 @@ describe('Can upvote/downvote/unvote', () => {
         expect(response.body).toHaveProperty('vote');
     })
 
+    test('Can get votes for a question', async () => {
+        const response = await request(app)
+            .get(`/api/v1/answer/votes/${answers[0].id}`).set(authHeader)
+            .expect(200);
+        console.log(response.body);
+        expect(response.body).toHaveProperty('votes');
+    })
+
     test('Unvote should respond with 200 success', async () => {
         const response = await request(app)
             .get(`/api/v1/answer/vote/unvote/${answers[0].id}`).set(authHeader)
@@ -102,6 +116,8 @@ describe('Can upvote/downvote/unvote', () => {
         console.log(response.body);
         expect(response.body).toHaveProperty('vote');
     })
+
+
 })
 
 

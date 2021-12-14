@@ -30,6 +30,10 @@ afterAll(async () => {
 
 describe('Test Create /user', () => {
     test('It should respond with 201 success given valid details', async () => {
+        const mockJobQueue = jest.fn((): any => 'email sent');
+        jest
+            .spyOn(JobQueue, "add")
+            .mockImplementation(() => mockJobQueue());
         const response = await request(app)
             .post('/api/v1/user/signup').send(user)
             .expect(201);
@@ -54,7 +58,11 @@ describe('Test Create /user', () => {
 
 describe('Email Verification', () => {
     test('request to resend email verification should return 200', async () => {
-
+        const mockJobQueue = jest.fn((): any => 'email sent');
+        jest
+            .spyOn(JobQueue, "add")
+            .mockImplementation(() => mockJobQueue());
+            
         const response = await request(app)
             .post('/api/v1/email/resendverification').send({ email: user.email })
             .expect(200);
@@ -106,6 +114,10 @@ describe('Test Login & Logout User /user', () => {
 
 
 describe('Password Reset', () => {
+    const mockJobQueue = jest.fn((): any => 'email sent');
+    jest
+        .spyOn(JobQueue, "add")
+        .mockImplementation(() => mockJobQueue());
     const resetToken = passwordReset.token
     test('request for password reset should return 200', async () => {
         const response = await request(app)

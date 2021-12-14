@@ -6,6 +6,7 @@ import { AnswerInstance } from "../model/answer.model";
 import { SubscriptionInstance } from "../model/subscription.model";
 import EmailUtils from '../utils/email'
 import { VoteInstance } from "../model/vote.model";
+import sequelize from "sequelize/dist/lib/sequelize";
 
 class AnswerController {
     async create(req: Request, res: Response) {
@@ -70,7 +71,7 @@ class AnswerController {
             const updatedAnswer = await AnswerInstance.update({ response }, { where: { user_id: user.id, id } });
             if (!updatedAnswer) return res.status(400).json({ msg: 'Answer not found' });
             res.status(200).json({
-                msg: 'Question Updated Successfully',
+                msg: 'Answer Updated Successfully',
                 updatedAnswer
             })
         } catch (error) {
@@ -83,7 +84,7 @@ class AnswerController {
         const { id } = req.params;
         try {
             const deletedAnswer = await AnswerInstance.destroy({ where: { user_id: user.id, id } });
-            if (!deletedAnswer) return res.status(400).json({ msg: 'Question not found' });
+            if (!deletedAnswer) return res.status(400).json({ msg: 'Answer not found' });
             res.status(200).json({
                 msg: 'Answer Deleted Successfully',
                 deletedAnswer
@@ -116,6 +117,22 @@ class AnswerController {
         } catch (error) {
             console.log('vote error', error)
             return res.status(500).json({ msg: 'failed to vote for answer', route: "/answer/vote" })
+        }
+    }
+
+    async getVotes(req: Request, res: Response) {
+        const { id, } = req.params;
+        try {
+            //find existing user vote
+            const votes = await VoteInstance.sum('vote', { where: { answer_id: id  } })
+           
+            res.status(200).json({
+                msg: 'Votes Retrieved Successfully',
+                votes
+            })
+        } catch (error) {
+            console.log('vote error', error)
+            return res.status(500).json({ msg: 'failed to retrieve votes', route: "/answer/votes" })
         }
     }
 

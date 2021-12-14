@@ -7,9 +7,6 @@ interface emailObj {
   html: string
 }
 
-interface userEmailObj {
-  user_email: string,
-}
 
 class EmailUtils {
 

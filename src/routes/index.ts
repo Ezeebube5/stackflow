@@ -8,7 +8,7 @@ import UserController from '../controllers/user.controller';
 import AnswerController from '../controllers/answer.controller';
 import UserValidator from '../validator/user.validator';
 
-import TestController from '../controllers/test.controller';
+// import TestController from '../controllers/test.controller';
 
 
 import middleware from '../middleware';
@@ -20,7 +20,7 @@ router.get('/', (req: Request, res: Response) => {
 
 
 //Test route for sandbox testing
-router.get('/test', TestController.create);
+// router.get('/test', TestController.create);
 
 
 //Authentication Routes
@@ -69,5 +69,6 @@ router.get('/answer/delete/:id', middleware.isAuthenticated, QuestionValidator.c
     middleware.handleValidationError, AnswerController.delete);
 router.get('/answer/vote/:action/:id', middleware.isAuthenticated, QuestionValidator.checkIdParam(),
     middleware.handleValidationError, AnswerController.vote);
+router.get('/answer/votes/:id', middleware.isAuthenticated, AnswerController.getVotes);
 
 export { router };
