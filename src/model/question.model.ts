@@ -2,7 +2,6 @@ import { DataTypes, Model, } from "sequelize";
 import db from "../config/database.config";
 import { AnswerInstance } from "./answer.model";
 import { UserInstance } from './user.model';
-import { VoteInstance } from "./vote.model";
 
 interface QuestionAttributes {
     id: string;
@@ -66,13 +65,4 @@ QuestionInstance.hasMany(AnswerInstance, {
     onUpdate: 'CASCADE',
 });
 AnswerInstance.belongsTo(QuestionInstance)
-
-QuestionInstance.hasMany(VoteInstance, {
-    foreignKey: {
-        name: 'question_id'
-    },
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-VoteInstance.belongsTo(QuestionInstance)
 

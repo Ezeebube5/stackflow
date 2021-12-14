@@ -67,6 +67,7 @@ router.post('/answer/update/:id', middleware.isAuthenticated, QuestionValidator.
     QuestionValidator.checkIdParam(), middleware.handleValidationError, AnswerController.update);
 router.get('/answer/delete/:id', middleware.isAuthenticated, QuestionValidator.checkIdParam(),
     middleware.handleValidationError, AnswerController.delete);
-
+router.get('/answer/vote/:action/:id', middleware.isAuthenticated, QuestionValidator.checkIdParam(),
+    middleware.handleValidationError, AnswerController.vote);
 
 export { router };

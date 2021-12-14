@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { AnswerInstance } from "../model/answer.model";
 import { SubscriptionInstance } from "../model/subscription.model";
 import EmailUtils from '../utils/email'
+import { VoteInstance } from "../model/vote.model";
 
 class AnswerController {
     async create(req: Request, res: Response) {
@@ -89,6 +90,32 @@ class AnswerController {
             })
         } catch (error) {
             return res.status(500).json({ msg: 'failed to delete answer', route: "/answer/delete" })
+        }
+    }
+
+    async vote(req: Request, res: Response) {
+        const { user } = req.body;
+        const { id, action } = req.params;
+
+        try {
+            //find existing user vote
+            const existingVote = await VoteInstance.findOne({ where: { user_id: user.id, answer_id: id } });
+            const voteId = existingVote ? existingVote.getDataValue('id') : uuidv4()
+            const voteAction: any = {
+                'upvote': 1,
+                'downvote': -1,
+                'unvote': 0
+            }
+            //update or insert vote
+            const vote = await VoteInstance.upsert({ id: voteId, answer_id: id, user_id: user.id, vote: voteAction[action] })
+            if (!vote) return res.status(400).json({ msg: 'Unable to vote. Please, try again.' });
+            res.status(200).json({
+                msg: 'Voted Successfully',
+                vote
+            })
+        } catch (error) {
+            console.log('vote error', error)
+            return res.status(500).json({ msg: 'failed to vote for answer', route: "/answer/vote" })
         }
     }
 

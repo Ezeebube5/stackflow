@@ -5,7 +5,7 @@ import { AnswerInstance } from './answer.model';
 
 interface VoteAttributes {
     id: string;
-    question_id: string;
+    answer_id: string;
     user_id: string;
     vote: number;
 }
@@ -28,7 +28,7 @@ VoteInstance.init(
                  key: "id"
              }
         },
-        question_id: {
+        answer_id: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {

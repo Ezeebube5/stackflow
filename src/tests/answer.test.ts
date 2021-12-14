@@ -79,14 +79,28 @@ describe('Can Update /answer/update/id', () => {
 })
 
 describe('Can upvote/downvote/unvote', () => {
-    test('It should respond with 200 updated', async () => {
+    test('Upvote should respond with 200 success', async () => {
         const response = await request(app)
-            .post(`/api/v1/answer/update/${answers[0].id}`).set(authHeader).send(answerUpdate)
+            .get(`/api/v1/answer/vote/upvote/${answers[0].id}`).set(authHeader)
             .expect(200);
         console.log(response.body);
-        
-        expect(response.body).toHaveProperty('updatedAnswer');
+        expect(response.body).toHaveProperty('vote');
+    })
 
+    test('Downvote should respond with 200 success', async () => {
+        const response = await request(app)
+            .get(`/api/v1/answer/vote/downvote/${answers[0].id}`).set(authHeader)
+            .expect(200);
+        console.log(response.body);
+        expect(response.body).toHaveProperty('vote');
+    })
+
+    test('Unvote should respond with 200 success', async () => {
+        const response = await request(app)
+            .get(`/api/v1/answer/vote/unvote/${answers[0].id}`).set(authHeader)
+            .expect(200);
+        console.log(response.body);
+        expect(response.body).toHaveProperty('vote');
     })
 })
 
