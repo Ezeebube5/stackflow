@@ -12,7 +12,7 @@ jest.setTimeout(20000)
 
 beforeAll(async () => {
     try {
-        await db.sync({ force: true }).then(() => {
+        await db.sync().then(() => {
             console.log('Refreshed Test DB for Auth Test')
         })
     } catch (error) {

@@ -20,7 +20,7 @@ SubscriptionInstance.init(
             allowNull: false,
         },
          user_email: {
-            type: DataTypes.UUID, 
+            type: DataTypes.STRING, 
             allowNull: false,
              references: {
                  model: UserInstance,

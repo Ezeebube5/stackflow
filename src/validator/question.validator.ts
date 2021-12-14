@@ -8,6 +8,11 @@ class QuestionValidator {
             body('desc').notEmpty().withMessage('Please, provide a description')
         ]
     }
+
+    checkAnswer() {
+        return [
+            body('response').notEmpty().withMessage('Please, provide a title'),        ]
+    }
     checkReadTodo() {
         return [
 

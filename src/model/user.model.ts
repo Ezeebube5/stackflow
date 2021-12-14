@@ -4,6 +4,7 @@ import AuthUtils from '../utils/authentication'
 import { EmailVerificationInstance } from "./emailVerification.model";
 import { PasswordResetInstance } from "./passwordReset.model";
 import { QuestionInstance } from "./question.model";
+import { VoteInstance } from "./vote.model";
 
 
 interface UserAttributes {
@@ -120,4 +121,15 @@ UserInstance.hasMany(PasswordResetInstance, {
 
 })
 PasswordResetInstance.belongsTo(UserInstance);
+
+UserInstance.hasMany(VoteInstance, {
+    foreignKey: {
+        name: 'user_id'
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
+VoteInstance.belongsTo(UserInstance)
+
+
 

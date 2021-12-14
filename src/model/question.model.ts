@@ -2,6 +2,7 @@ import { DataTypes, Model, } from "sequelize";
 import db from "../config/database.config";
 import { AnswerInstance } from "./answer.model";
 import { UserInstance } from './user.model';
+import { VoteInstance } from "./vote.model";
 
 interface QuestionAttributes {
     id: string;
@@ -38,7 +39,7 @@ QuestionInstance.init(
             allowNull: false,
         },
     }, {
-        sequelize: db, tableName: 'questions',
+    sequelize: db, tableName: 'questions',
     // hooks:{
     //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     //     beforeCreate:(question: any, options)=> {
@@ -60,7 +61,18 @@ QuestionInstance.init(
 QuestionInstance.hasMany(AnswerInstance, {
     foreignKey: {
         name: 'question_id'
-    }
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
 });
 AnswerInstance.belongsTo(QuestionInstance)
+
+QuestionInstance.hasMany(VoteInstance, {
+    foreignKey: {
+        name: 'question_id'
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
+VoteInstance.belongsTo(QuestionInstance)
 

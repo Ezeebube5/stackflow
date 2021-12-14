@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from '../app';
 import { QuestionInstance } from '../model/question.model';
-import { questions, user, questionById, answers, questionUpdate } from './testData';
+import { questions, user, questionById, answers, questionUpdate, defaultQuestionId_1, defaultQuestionId_2 } from './testData';
 import db from '../config/database.config';
 import { UserInstance } from "../model/user.model";
 import AuthUtils from '../utils/authentication';
@@ -14,13 +14,12 @@ jest.setTimeout(20000)
 let authHeader = {};
 beforeAll(async () => {
     try {
-        await db.sync({ force: true }).then(async () => {
+        await db.sync().then(async () => {
             console.log('Refreshed Test DB for Questions Test');
             // create sample user, login and get auth token for queries
             const { id, first_name, last_name, email, password, username } = user
             const hashedPassword = await AuthUtils.hashPassword(password)
             await UserInstance.create({ id, first_name, last_name, email, username, password: hashedPassword, email_verified: true })
-
             await QuestionInstance.bulkCreate(questions)
             await AnswerInstance.bulkCreate(answers)
 
@@ -52,7 +51,7 @@ describe('Can Get / as base test case', () => {
     })
 })
 
-describe('Can Get /question/read', () => {
+describe('Can Get Questions', () => {
     test('It should respond with 200 success', async () => {
         // const mockReadAllQuestion = jest.fn((): any => questions);
         // jest
@@ -70,22 +69,19 @@ describe('Can Get /question/read', () => {
     })
 })
 
-describe('Can Get /question/read/:id', () => {
+describe('Can Get a Question by Id', () => {
     test('It should respond with 200 success', async () => {
-        // const mockReadOneQuestion = jest.fn((): any => questionById);
-        // jest
-        //     .spyOn(QuestionInstance, "findOne")
-        //     .mockImplementation(() => mockReadOneQuestion());
-
         const response = await request(app)
-            .get(`/api/v1/question/read/${questions[0].id}`)
+            .get(`/api/v1/question/read/${defaultQuestionId_1}`)
             .expect(200);
+        console.log(response.body);
+
         expect(response.body).toHaveProperty('question');
 
     })
 })
 
-describe('Can Post /question/create', () => {
+describe('Can Create Question', () => {
     test('It should respond with 201 created', async () => {
         console.log('auth header', authHeader)
         const response = await request(app)
@@ -98,10 +94,10 @@ describe('Can Post /question/create', () => {
     })
 })
 
-describe('Can Update /question/update/id', () => {
+describe('Can Update Question', () => {
     test('It should respond with 200 updated', async () => {
         const response = await request(app)
-            .post(`/api/v1/question/update/${questions[0].id}`).set(authHeader).send(questionUpdate)
+            .post(`/api/v1/question/update/${defaultQuestionId_1}`).set(authHeader).send(questionUpdate)
             .expect(200);
         console.log(response.body);
         expect(response.body).toHaveProperty('updatedQuestion');
@@ -111,10 +107,10 @@ describe('Can Update /question/update/id', () => {
 })
 
 
-describe('Can get /question/delete', () => {
+describe('Can delete a question', () => {
     test('It should respond with 201 created', async () => {
         const response = await request(app)
-            .get(`/api/v1/question/delete/${questions[1].id}`).set(authHeader)
+            .get(`/api/v1/question/delete/${defaultQuestionId_2}`).set(authHeader)
             .expect(200);
 
         console.log(response.body);
@@ -122,3 +118,40 @@ describe('Can get /question/delete', () => {
     })
 })
 
+describe('Can subscribe to a question', () => {
+    test('It should respond with 200 success', async () => {
+        const response = await request(app)
+            .get(`/api/v1/question/subscription/subscribe/${defaultQuestionId_1}`).set(authHeader)
+            .expect(200);
+
+        console.log(response.body);
+        expect(response.body.isSubscribed).toEqual(true);
+
+    })
+})
+
+describe('Can get question subscriptions', () => {
+    test('It should respond with 200 success', async () => {
+        const response = await request(app)
+            .get(`/api/v1/question/subscriptions/${defaultQuestionId_1}`).set(authHeader)
+            .expect(200);
+
+        console.log(response.body);
+        expect(response.body).toHaveProperty('subscriptions');
+
+    })
+})
+
+
+describe('Can unsubscribe from a question', () => {
+    test('It should respond with 200 success', async () => {
+        const response = await request(app)
+            .get(`/api/v1/question/subscription/unsubscribe/${defaultQuestionId_1}`).set(authHeader)
+            .expect(200);
+
+        console.log(response.body);
+        expect(response.body.isSubscribed).toEqual(false);
+
+
+    })
+})

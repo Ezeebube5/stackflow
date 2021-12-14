@@ -10,7 +10,7 @@ interface AnswerAttributes {
     response: string;
 }
 
-export class AnswerInstance extends Model<AnswerAttributes> {}
+export class AnswerInstance extends Model<AnswerAttributes> { }
 
 AnswerInstance.init(
     {
@@ -20,13 +20,13 @@ AnswerInstance.init(
             primaryKey: true,
             allowNull: false,
         },
-         user_id: {
-            type: DataTypes.UUID, 
+        user_id: {
+            type: DataTypes.UUID,
             allowNull: false,
-             references: {
-                 model: UserInstance,
-                 key: "id"
-             }
+            references: {
+                model: UserInstance,
+                key: "id"
+            }
         },
         question_id: {
             type: DataTypes.UUID,
@@ -40,8 +40,9 @@ AnswerInstance.init(
             type: DataTypes.TEXT,
             allowNull: false,
         },
-    },{sequelize: db, tableName: 'answers', 
- 
+    }, {
+    sequelize: db, tableName: 'answers',
+
 }
 )
 

@@ -9,7 +9,6 @@ const question_model_1 = require("../model/question.model");
 const testData_1 = require("./testData");
 const database_config_1 = __importDefault(require("../config/database.config"));
 // jest.useFakeTimers();
-// let server: any, agent;
 beforeAll(async () => {
     await database_config_1.default.sync({ force: true }).then(() => {
         console.log('Refreshed Test DB for Questions Test');
@@ -51,7 +50,3 @@ describe('Can Get /question/read/:id', () => {
         expect(mockReadOneQuestion).toHaveBeenCalledTimes(1);
     });
 });
-// afterAll(async () => {
-//     await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
-// });
-// afterEach(app.close());

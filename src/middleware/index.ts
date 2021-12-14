@@ -7,6 +7,7 @@ class Middleware {
 	handleValidationError(req: Request, res: Response, next: NextFunction) {
 		const error = validationResult(req);
 		if (!error.isEmpty()) {
+			console.log('validation error', error.array())
 			return res.status(400).json(error.array()[0]);
 		}
 		next();
