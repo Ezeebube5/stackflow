@@ -24,7 +24,6 @@ class EmailUtils {
       );
       return { msg: 'Email Dispatched', EmailDetails }
     } catch (err) {
-      console.log('send Email Error', err);
       return null
     }
   }

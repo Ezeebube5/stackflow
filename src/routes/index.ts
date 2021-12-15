@@ -1,5 +1,3 @@
-//TODO: separate out routes
-
 import { Router, Request, Response } from 'express';
 
 import QuestionValidator from '../validator/question.validator';
@@ -8,7 +6,6 @@ import UserController from '../controllers/user.controller';
 import AnswerController from '../controllers/answer.controller';
 import UserValidator from '../validator/user.validator';
 
-// import TestController from '../controllers/test.controller';
 
 
 import middleware from '../middleware';
@@ -17,10 +14,6 @@ const router = Router();
 router.get('/', (req: Request, res: Response) => {
     res.send('Welcome to the Stackflow API');
 });
-
-
-//Test route for sandbox testing
-// router.get('/test', TestController.create);
 
 
 //Authentication Routes
@@ -52,6 +45,8 @@ router.post('/question/update/:id', middleware.isAuthenticated, QuestionValidato
     QuestionValidator.checkIdParam(), middleware.handleValidationError, QuestionController.update);
 router.get('/question/delete/:id', middleware.isAuthenticated, QuestionValidator.checkIdParam(),
     middleware.handleValidationError, QuestionController.delete);
+
+//Subscription Routes
 router.get('/question/subscription/:action/:id', middleware.isAuthenticated, QuestionValidator.checkIdParam(),
     middleware.handleValidationError, QuestionController.toggleSubscription);
 router.get('/question/subscriptions/:id', middleware.isAuthenticated, QuestionValidator.checkIdParam(),
@@ -67,6 +62,8 @@ router.post('/answer/update/:id', middleware.isAuthenticated, QuestionValidator.
     QuestionValidator.checkIdParam(), middleware.handleValidationError, AnswerController.update);
 router.get('/answer/delete/:id', middleware.isAuthenticated, QuestionValidator.checkIdParam(),
     middleware.handleValidationError, AnswerController.delete);
+
+//Voting Routes
 router.get('/answer/vote/:action/:id', middleware.isAuthenticated, QuestionValidator.checkIdParam(),
     middleware.handleValidationError, AnswerController.vote);
 router.get('/answer/votes/:id', middleware.isAuthenticated, AnswerController.getVotes);

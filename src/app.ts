@@ -21,7 +21,7 @@ app.use(cors());
 // security config
 app.use(helmet());
 
-
+//JSON and URL-encoded Parsers 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

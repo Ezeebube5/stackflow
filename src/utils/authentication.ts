@@ -24,16 +24,15 @@ class AuthUtils {
     return isMatch;
   }
 
-  createToken(user: object):any {
+  createToken(user: object): any {
     const token = jwt.sign(user, config.jwt.secret,
       { algorithm: 'HS256', expiresIn: config.jwt.expiry }
     )
     return token;
   }
 
-   verifyToken(token: string):any {
+  verifyToken(token: string): any {
     const verifiedToken = jwt.verify(token, config.jwt.secret)
-    console.log('delete log', verifiedToken);
     return verifiedToken;
   }
 
@@ -52,10 +51,9 @@ class AuthUtils {
         subject: 'Verify your email ✔',
         html: `<p>Email Verification Link: <a>${verificationLink}</a></p>`
       });
-            
+
       return { msg: 'Email Verification Sent', emailVerification }
     } catch (err) {
-      console.log('sendEmailVerification Error', err);
       return null
     }
   }
@@ -70,18 +68,17 @@ class AuthUtils {
 
       const passwordReset = await PasswordResetInstance.create({ id, user_email: emailObj.email, token });
 
-       // add email to queue
+      // add email to queue
       const EmailDispatch = await EmailUtils.dispatchEmail({
         to: [emailObj.email],
         subject: 'Reset your password',
         html: `<p>Password change Link: <a>${passwordResetLink}</a></p>`
       });
-       
 
-     
+
+
       return { msg: 'Email Verification Sent', passwordReset }
     } catch (err) {
-      console.log('sendpasswordReset Error', err);
       return null
     }
   }

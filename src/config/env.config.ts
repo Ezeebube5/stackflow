@@ -4,7 +4,7 @@ const config = {
   databaseUrl: process.env.JAWSDB_URL || 'mysql://user:pass@localhost:3306/test',
   jwt: {
     secret: process.env.JWT_SECRET || 'nosecret',
-    expiry: process.env.JWT_EXPIRY || '30d'
+    expiry: process.env.JWT_EXPIRY || '1d'
   },
   redisUrl: process.env.REDIS_URL || '',
   smtp: {

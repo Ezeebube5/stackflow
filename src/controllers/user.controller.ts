@@ -4,7 +4,6 @@ import { UserInstance } from "../model/user.model";
 import { v4 as uuidv4 } from "uuid";
 import AuthUtils from "../utils/authentication";
 import RedisClient from '../config/redis.config';
-import { emailVerification } from "../tests/testData";
 import { EmailVerificationInstance } from "../model/emailVerification.model";
 import { PasswordResetInstance } from "../model/passwordReset.model";
 
@@ -25,13 +24,13 @@ class UserController {
             });
             if (existingUser) return res.status(400).json({ msg: 'Username/email already exists' });
 
+            //create id, hash password, and save user 
             const id = uuidv4();
             const hashedPassword = await AuthUtils.hashPassword(password)
             const user = await UserInstance.create({ id, first_name, last_name, email, password: hashedPassword, username, email_verified: false });
 
             await AuthUtils.sendEmailVerification({ id, email });
 
-            console.log('user', user.getDataValue('email'))
             res.status(201).json({
                 msg: 'Account Created Successfully',
                 user: {
@@ -40,7 +39,6 @@ class UserController {
                 }
             })
         } catch (error) {
-            console.log('error', error)
             return res.status(500).json({ msg: 'failed to create account', route: "/user/signup" })
         }
     }
@@ -49,21 +47,21 @@ class UserController {
         const { email } = req.body;
         try {
 
-            //check if user exists with email in request
+            //check if user exists with email in request 
             const user = await UserInstance.findOne({ where: { email } });
-
             if (!user) return res.status(400).json({ msg: 'Email not found' });
+
+            // Has user been verified already?
             if (user.getDataValue('email_verified')) return res.status(400).json({ msg: 'Email verified already' });
 
+            //Resend Verification Email
             await AuthUtils.sendEmailVerification({ id: user.getDataValue('id'), email });
 
-            console.log('user', user.getDataValue('email'))
             res.status(200).json({
                 msg: 'Verification Email Resent!',
                 email
             })
         } catch (error) {
-            console.log('error', error)
             return res.status(500).json({ msg: 'failed to resend email', route: "/email/resendverification" })
         }
     }
@@ -79,17 +77,16 @@ class UserController {
             // delete verification token and abort operation if token doesn't exist
             const verificationData = await EmailVerificationInstance.destroy({ where: { token } })
             if (!verificationData) return res.status(400).json({ msg: 'Unable to verify email, please try again' });
-            
+
             //update user email verification status
             const user = await UserInstance.update({ email_verified: true }, { where: { email: verifiedToken.email } });
 
-            console.log('user', user, verificationData)
             res.status(200).json({
                 msg: 'Email Verified!',
 
+
             })
         } catch (error) {
-            console.log('error', error)
             return res.status(500).json({ msg: 'failed to verify email. Please, try again', route: "/email/resendverification" })
         }
     }
@@ -99,7 +96,6 @@ class UserController {
 
             //check if user exists with email in request
             const user = await UserInstance.findOne({ where: { email } });
-
             if (!user) return res.status(400).json({ msg: 'Email not found' });
 
             await AuthUtils.sendPasswordResetEmail({ id: user.getDataValue('id'), email });
@@ -109,14 +105,13 @@ class UserController {
                 email
             })
         } catch (error) {
-            console.log('error', error)
             return res.status(500).json({ msg: 'failed to resend email', route: "/email/resendverification" })
         }
     }
 
     async changePassword(req: Request, res: Response) {
         const { token } = req.params;
-        const {password} = req.body;
+        const { password } = req.body;
         try {
 
             //verify JWT
@@ -127,19 +122,16 @@ class UserController {
             const resetData = await PasswordResetInstance.destroy({ where: { token } })
             if (!resetData) return res.status(400).json({ msg: 'Unable to reset password, please try again' });
 
-            console.log('change password', verifiedToken, resetData);
 
             //update user password given valid row was found in Password Resets
             const hashedPassword = await AuthUtils.hashPassword(password)
             const user = await UserInstance.update({ password: hashedPassword }, { where: { email: verifiedToken.email } });
 
-            console.log('user', password, user)
             res.status(200).json({
                 msg: 'Your password has been changed!',
 
             })
         } catch (error) {
-            console.log('error', error)
             return res.status(500).json({ msg: 'failed to verify email. Please, try again', route: "/email/resendverification" })
         }
     }
@@ -152,9 +144,8 @@ class UserController {
             const user = await UserInstance.findOne({ where: { email } });
             if (!user) return res.status(400).json({ msg: 'No user found with this email' });
             if (!user.getDataValue('email_verified')) return res.status(400).json({ msg: 'No user found with this email' })
-            //compare hashed password
-            console.log('passwords', password, user.getDataValue('password'), user.getDataValue('email_verified'))
 
+            //compare hashed password
             const passwordValid = await AuthUtils.confirmPassword(password, user.getDataValue('password'))
             if (!passwordValid) return res.status(400).json({ msg: 'Incorrect Password' })
 
@@ -170,7 +161,6 @@ class UserController {
             const authToken = await AuthUtils.createToken(userDetails);
             const cacheToken = await RedisClient.saveToken(userDetails.id, authToken);
 
-            console.log('authtoken', authToken, cacheToken)
             res.status(200).json({
                 msg: 'Login Successful!',
                 user: userDetails,
@@ -178,7 +168,6 @@ class UserController {
 
             })
         } catch (error) {
-            console.log('error', error)
             return res.status(500).json({ msg: 'failed to create account', route: "/user/signup" })
         }
     }
@@ -188,14 +177,12 @@ class UserController {
         try {
             //remove AuthToken from redis DB to prevent further requests
             const removedToken = await RedisClient.removeToken(user.id);
-            console.log('removedToken', removedToken)
 
             res.status(200).json({
                 msg: 'Logout Successful!'
 
             })
         } catch (error) {
-            console.log('error', error)
             return res.status(500).json({ msg: 'failed to logout', route: "/user/logout" })
         }
     }

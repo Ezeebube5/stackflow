@@ -9,7 +9,7 @@ interface SubscriptionAttributes {
     user_email: string;
 }
 
-export class SubscriptionInstance extends Model<SubscriptionAttributes> {}
+export class SubscriptionInstance extends Model<SubscriptionAttributes> { }
 
 SubscriptionInstance.init(
     {
@@ -19,13 +19,13 @@ SubscriptionInstance.init(
             primaryKey: true,
             allowNull: false,
         },
-         user_email: {
-            type: DataTypes.STRING, 
+        user_email: {
+            type: DataTypes.STRING,
             allowNull: false,
-             references: {
-                 model: UserInstance,
-                 key: "email"
-             }
+            references: {
+                model: UserInstance,
+                key: "email"
+            }
         },
         question_id: {
             type: DataTypes.UUID,
@@ -35,8 +35,9 @@ SubscriptionInstance.init(
                 key: "id"
             }
         },
-    },{sequelize: db, tableName: 'subscriptions', 
- 
+    }, {
+        sequelize: db, tableName: 'subscriptions',
+
 }
 )
 

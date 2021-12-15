@@ -11,7 +11,7 @@ class QuestionValidator {
 
     checkAnswer() {
         return [
-            body('response').notEmpty().withMessage('Please, provide a title'),        ]
+            body('response').notEmpty().withMessage('Please, provide a title'),]
     }
     checkReadTodo() {
         return [

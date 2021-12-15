@@ -39,23 +39,10 @@ QuestionInstance.init(
         },
     }, {
     sequelize: db, tableName: 'questions',
-    // hooks:{
-    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //     beforeCreate:(question: any, options)=> {
-    //         question.id = uuidv4();
-    // }
+
 }
 )
 
-// QuestionInstance.belongsTo(UserInstance, {
-//     foreignKey: {
-//         name: 'user_id',        
-//         allowNull: false,
-//     },
-//     onDelete: 'CASCADE',
-//     onUpdate: 'CASCADE',
-
-// });
 
 QuestionInstance.hasMany(AnswerInstance, {
     foreignKey: {

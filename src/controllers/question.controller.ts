@@ -9,8 +9,11 @@ class QuestionController {
     async create(req: Request, res: Response) {
         const { title, desc, user } = req.body;
         try {
+
+            //Create Id and save question
             const id = uuidv4();
             const question = await QuestionInstance.create({ id, user_id: user.id, title, desc });
+
             // Subscribe the user to this question by default
             const subscription = await SubscriptionInstance.create({ id: uuidv4(), user_email: user.email, question_id: id });
 
@@ -28,6 +31,7 @@ class QuestionController {
         const { id } = req.params;
 
         try {
+            //update question if created by user
             const updatedQuestion = await QuestionInstance.update({ title, desc }, { where: { user_id: user.id, id } });
             if (!updatedQuestion) return res.status(400).json({ msg: 'Question not found' });
             res.status(200).json({
@@ -43,6 +47,8 @@ class QuestionController {
         const { user } = req.body;
         const { id } = req.params;
         try {
+
+            //delete question if created by user
             const deletedQuestion = await QuestionInstance.destroy({ where: { user_id: user.id, id } });
             if (!deletedQuestion) return res.status(400).json({ msg: 'Question not found' });
             res.status(200).json({
@@ -55,6 +61,7 @@ class QuestionController {
     }
     async readPagination(req: Request, res: Response) {
         try {
+            //Fetch questions with optional limit and offset 
             const limit = parseInt((req.query?.limit as string | undefined) || '10');
             const offset = parseInt((req.query?.limit as string | undefined) || '0');
             const questions = await QuestionInstance.findAll({ limit, offset });
@@ -63,7 +70,6 @@ class QuestionController {
                 questions
             })
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ msg: 'failed to retrieve question', route: '/questions' })
         }
     }
@@ -80,7 +86,6 @@ class QuestionController {
                 question
             })
         } catch (error) {
-            console.log('read by id error', error);
             return res.status(500).json({ msg: 'failed to retrieve question' })
         }
     }
@@ -102,7 +107,6 @@ class QuestionController {
             // if a null value was returned from any of the actions, then the subscription status wasn't changed
             if (!subscription) return res.status(400).json({ msg: 'Unable to change subscription status' });
 
-            console.log('subscription status', subscription, isSubscribed);
             res.status(200).json({
                 msg: 'Your subscription status has changed',
                 isSubscribed,
@@ -110,7 +114,6 @@ class QuestionController {
 
             })
         } catch (error) {
-            console.log('togglesubscription error', error)
             return res.status(500).json({ msg: 'failed to subscribe to question', route: "/question/subscribe" })
         }
     }
@@ -124,7 +127,6 @@ class QuestionController {
                 subscriptions
             })
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ msg: 'failed to retrieve subscription' })
         }
     }

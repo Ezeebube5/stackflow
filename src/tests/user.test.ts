@@ -6,9 +6,7 @@ import redisClient from '../config/redis.config';
 import JobQueue from "../config/queue.config";
 import { EmailVerificationInstance } from "../model/emailVerification.model";
 import { PasswordResetInstance } from "../model/passwordReset.model";
-// jest.useFakeTimers();
 jest.setTimeout(20000)
-// let server: any, agent;
 
 beforeAll(async () => {
     try {
@@ -21,6 +19,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    //Disconnect JobQueue, Redis Client and Main DB
     await JobQueue.obliterate({ force: true });
     await redisClient.shutDown();
     await db.close()
@@ -37,7 +36,7 @@ describe('Test Create /user', () => {
         const response = await request(app)
             .post('/api/v1/user/signup').send(user)
             .expect(201);
-        console.log('response body', response.body);
+        
         expect(response.body.user).toEqual({ email: user.email, username: user.username });
 
     })
@@ -62,7 +61,7 @@ describe('Email Verification', () => {
         jest
             .spyOn(JobQueue, "add")
             .mockImplementation(() => mockJobQueue());
-            
+
         const response = await request(app)
             .post('/api/v1/email/resendverification').send({ email: user.email })
             .expect(200);
@@ -92,7 +91,7 @@ describe('Test Login & Logout User /user', () => {
             .post('/api/v1/user/login').send(user)
             .expect(200);
 
-        console.log('response body', response.body);
+        
         expect(response.body).toHaveProperty('authToken');
         authToken = response.body.authToken;
 
@@ -103,7 +102,7 @@ describe('Test Login & Logout User /user', () => {
             .post('/api/v1/user/logout').set({ 'Authorization': `Bearer ${authToken}` })
             .expect(200);
 
-        console.log('response body', response.body);
+        
         expect(response.body).toEqual({
             "msg": "Logout Successful!"
         });
